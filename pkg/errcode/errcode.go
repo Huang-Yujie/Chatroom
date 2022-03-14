@@ -6,12 +6,8 @@ import (
 )
 
 type Error struct {
-	// 错误码
-	code int `json:"code"`
-	// 错误消息
-	msg string `json:"msg"`
-	// 详细信息
-	details []string `json:"details"`
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
 }
 
 var codes = map[int]string{}
@@ -21,56 +17,40 @@ func NewError(code int, msg string) *Error {
 		panic(fmt.Sprintf("错误码 %d 已经存在，请更换一个", code))
 	}
 	codes[code] = msg
-	return &Error{code: code, msg: msg}
+	return &Error{Code: code, Msg: msg}
 }
 
 func (e *Error) Error() string {
-	return fmt.Sprintf("错误码：%d, 错误信息:%s", e.Code(), e.Msg())
-}
-
-func (e *Error) Code() int {
-	return e.code
-}
-
-func (e *Error) Msg() string {
-	return e.msg
+	return fmt.Sprintf("错误码：%d, 错误信息:%s", e.Code, e.Msg)
 }
 
 func (e *Error) Msgf(args []interface{}) string {
-	return fmt.Sprintf(e.msg, args...)
-}
-
-func (e *Error) Details() []string {
-	return e.details
-}
-
-func (e *Error) WithDetails(details ...string) *Error {
-	newError := *e
-	newError.details = []string{}
-	newError.details = append(newError.details, details...)
-
-	return &newError
+	return fmt.Sprintf(e.Msg, args...)
 }
 
 func (e *Error) StatusCode() int {
-	switch e.Code() {
-	case Success.Code():
+	switch e.Code {
+	case Success.Code:
 		return http.StatusOK
-	case ServerError.Code():
+	case ServerError.Code:
 		return http.StatusInternalServerError
-	case InvalidParams.Code():
+	case InvalidParams.Code:
 		return http.StatusBadRequest
-	case UnauthorizedAuthNotExist.Code():
+	case UnauthorizedAuthNotExist.Code:
 		fallthrough
-	case UnauthorizedTokenError.Code():
+	case UnauthorizedTokenError.Code:
 		fallthrough
-	case UnauthorizedTokenGenerate.Code():
+	case UnauthorizedTokenGenerate.Code:
 		fallthrough
-	case UnauthorizedTokenTimeout.Code():
+	case UnauthorizedTokenTimeout.Code:
 		return http.StatusUnauthorized
-	case TooManyRequests.Code():
+	case TooManyRequests.Code:
 		return http.StatusTooManyRequests
 	}
 
 	return http.StatusInternalServerError
+}
+
+func Convert(err error) *Error {
+	return &Error{Code: 10000008, Msg: err.Error()}
 }

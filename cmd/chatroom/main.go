@@ -6,9 +6,11 @@ import (
 	"time"
 
 	"github.com/Huang-Yujie/Chatroom/global"
+	"github.com/Huang-Yujie/Chatroom/internal/model"
 	"github.com/Huang-Yujie/Chatroom/internal/routers"
 	"github.com/Huang-Yujie/Chatroom/internal/setting"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func init() {
@@ -16,6 +18,11 @@ func init() {
 	if err != nil {
 		log.Fatalf("init.setupSettings err: %v", err)
 	}
+	err = setupDBEngine()
+	if err != nil {
+		log.Fatalf("init.setupDBEngine err: %v", err)
+	}
+	err = SetupTableModel(global.DBEngine, &model.User{}, &model.Message{})
 }
 
 func main() {
@@ -49,5 +56,22 @@ func setupSettings() error {
 
 	global.ServerSettings.ReadTimeout *= time.Second
 	global.ServerSettings.WriteTimeout *= time.Second
+	return nil
+}
+
+func setupDBEngine() error {
+	var err error
+	global.DBEngine, err = model.NewDBEngine(global.DatabaseSettings)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func SetupTableModel(db *gorm.DB, models ...interface{}) error {
+	err := db.AutoMigrate(models)
+	if err != nil {
+		return err
+	}
 	return nil
 }

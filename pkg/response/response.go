@@ -25,11 +25,5 @@ func (r *Response) ToResponse(data interface{}) {
 }
 
 func (r *Response) ToErrorResponse(err *errcode.Error) {
-	response := gin.H{"code": err.Code(), "msg": err.Msg()}
-	details := err.Details()
-	if len(details) > 0 {
-		response["details"] = details
-	}
-
-	r.Ctx.JSON(err.StatusCode(), response)
+	r.Ctx.JSON(err.StatusCode(), err)
 }
