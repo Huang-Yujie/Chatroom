@@ -4,19 +4,26 @@ import (
 	"net/http"
 
 	"github.com/Huang-Yujie/Chatroom/global"
+	"github.com/Huang-Yujie/Chatroom/internal/routers/api"
 	"github.com/gin-gonic/gin"
 )
 
 func NewRouter() *gin.Engine {
 	r := gin.New()
-	if global.ServerSettings.Runmode == "debug" {
+	if global.ServerSettings.RunMode == "debug" {
 		r.Use(gin.Logger(), gin.Recovery())
 	}
-	api := r.Group("/api")
+	user := api.NewUser()
+	message := api.NewMessage()
+	apiGroup := r.Group("/api")
 	{
-		api.GET("/", func(c *gin.Context) {
+		apiGroup.GET("/", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"msg": "test"})
 		})
+
+		apiGroup.POST("/register", user.Register)
+		apiGroup.POST("/login", user.Login)
+		apiGroup.POST("/send", message.Send)
 	}
 	return r
 }
