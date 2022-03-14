@@ -10,8 +10,8 @@ type User struct {
 	UserName  string `json:"user_name"`
 	Nickname  string `json:"nickname"`
 	Password  string `json:"password"`
-	CreatedAt int    `json:"created_at"`
-	UpdatedAt int    `json:"updated_at"`
+	CreatedAt int64  `gorm:"autoCreateTime:milli" json:"created_at"`
+	UpdatedAt int64  `gorm:"autoUpdateTime:milli" json:"updated_at"`
 }
 
 func (u User) Create(db *gorm.DB) *errcode.Error {
@@ -20,7 +20,11 @@ func (u User) Create(db *gorm.DB) *errcode.Error {
 	if err != gorm.ErrRecordNotFound {
 		return errcode.ErrorDuplicatedUserName
 	}
-	return errcode.Convert(db.Create(&user).Error)
+	err = db.Create(&u).Error
+	if err != nil {
+		return errcode.Convert(err)
+	}
+	return nil
 }
 
 func (u User) Get(db *gorm.DB) (User, *errcode.Error) {
@@ -29,5 +33,8 @@ func (u User) Get(db *gorm.DB) (User, *errcode.Error) {
 	if err == gorm.ErrRecordNotFound {
 		return user, errcode.ErrorUserNameNotFound
 	}
-	return user, errcode.Convert(err)
+	if err != nil {
+		return user, errcode.Convert(err)
+	}
+	return user, nil
 }

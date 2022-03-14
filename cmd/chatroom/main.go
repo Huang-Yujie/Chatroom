@@ -22,7 +22,8 @@ func init() {
 	if err != nil {
 		log.Fatalf("init.setupDBEngine err: %v", err)
 	}
-	err = SetupTableModel(global.DBEngine, &model.User{}, &model.Message{})
+	err = SetupTableModel(global.DBEngine, &model.User{})
+	err = SetupTableModel(global.DBEngine, &model.Message{})
 }
 
 func main() {
@@ -68,7 +69,7 @@ func setupDBEngine() error {
 	return nil
 }
 
-func SetupTableModel(db *gorm.DB, models ...interface{}) error {
+func SetupTableModel(db *gorm.DB, models interface{}) error {
 	err := db.AutoMigrate(models)
 	if err != nil {
 		return err
