@@ -2,9 +2,10 @@ package model
 
 import (
 	"fmt"
-	"gorm.io/gorm"
-	"gorm.io/driver/mysql"
+
 	"github.com/Huang-Yujie/Chatroom/internal/setting"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func NewDBEngine(databaseSettings *setting.DatabaseSetting) (*gorm.DB, error) {
