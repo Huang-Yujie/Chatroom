@@ -26,6 +26,7 @@ func (u User) Register(c *gin.Context) {
 	user, err := svc.UserRegister(&param)
 	if err != nil {
 		response.ToErrorResponse(err)
+		return
 	}
 	response.ToResponse(user)
 }
@@ -42,6 +43,7 @@ func (u User) Login(c *gin.Context) {
 	user, err := svc.UserLogin(&param)
 	if err != nil {
 		response.ToErrorResponse(err)
+		return
 	}
 	response.ToResponse(user)
 
