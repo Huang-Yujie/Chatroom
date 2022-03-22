@@ -9,7 +9,7 @@ type User struct {
 	ID        uint64 `json:"user_id" gorm:"autoIncrement"`
 	UserName  string `json:"user_name"`
 	Nickname  string `json:"nickname"`
-	Password  string `json:"password"`
+	Password  string `json:"-"`
 	CreatedAt int64  `gorm:"autoCreateTime:milli" json:"created_at"`
 	UpdatedAt int64  `gorm:"autoUpdateTime:milli" json:"updated_at"`
 }
