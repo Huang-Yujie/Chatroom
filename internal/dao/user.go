@@ -20,3 +20,7 @@ func (d *Dao) UserLogin(username, password string) (*model.User, *errcode.Error)
 	}
 	return user, nil
 }
+
+func (d *Dao) UserGet(userID uint64) (*model.User, *errcode.Error) {
+	return model.User{ID: userID}.Get(d.engine)
+}

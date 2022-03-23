@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/Huang-Yujie/Chatroom/global"
 	"github.com/Huang-Yujie/Chatroom/internal/setting"
-	"github.com/Huang-Yujie/Chatroom/pkg/auth"
+	"nhooyr.io/websocket"
+	"nhooyr.io/websocket/wsjson"
 )
 
 func main() {
@@ -15,12 +17,32 @@ func main() {
 	// if err != nil {
 	// 	panic(err)
 	// }
-	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJpc3MiOiJIdWFuZyIsImV4cCI6MTY0ODAyODI2NCwibmJmIjoxNjQ4MDI4MjY0LCJpYXQiOjE2NDgwMjgyNjR9.Hn7VBIEOi02Hhe7uCxD4AoMzeCckizQ9SjgIL7EiUD4"
-	claims, err := auth.ParseToken(token)
+	// claims, err := auth.ParseToken(token)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println("UserID", claims.UserID)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	c, _, err := websocket.Dial(ctx, "ws://localhost:8080/ws", nil)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("UserID", claims.UserID)
+	defer c.Close(websocket.StatusInternalError, "内部错误！")
+
+	err = wsjson.Write(ctx, c, "Hello WebSocket Server")
+	if err != nil {
+		panic(err)
+	}
+
+	var v interface{}
+	err = wsjson.Read(ctx, c, &v)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("接收到服务端响应：%v\n", v)
+
 }
 func setupSettings() error {
 	settings, err := setting.NewSetting()

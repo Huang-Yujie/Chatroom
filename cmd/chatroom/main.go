@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Huang-Yujie/Chatroom/global"
+	"github.com/Huang-Yujie/Chatroom/internal/chat"
 	"github.com/Huang-Yujie/Chatroom/internal/model"
 	"github.com/Huang-Yujie/Chatroom/internal/routers"
 	"github.com/Huang-Yujie/Chatroom/internal/setting"
@@ -23,7 +24,11 @@ func init() {
 		log.Fatalf("init.setupDBEngine err: %v", err)
 	}
 	err = SetupTableModel(global.DBEngine, &model.User{})
-	err = SetupTableModel(global.DBEngine, &model.Message{})
+	if err != nil {
+		log.Fatalf("init.setupTableModel err: %v", err)
+	}
+
+	go chat.Broadcaster.Start()
 }
 
 func main() {
@@ -55,6 +60,10 @@ func setupSettings() error {
 		return err
 	}
 	err = settings.ReadSection("JWT", &global.JWTSettings)
+	if err != nil {
+		return err
+	}
+	err = settings.ReadSection("Chatroom", &global.ChatroomSettings)
 	if err != nil {
 		return err
 	}

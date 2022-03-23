@@ -28,6 +28,10 @@ type JWTSetting struct {
 	Expire time.Duration
 }
 
+type ChatroomSetting struct {
+	MessageQueueLength int
+}
+
 func (s *Setting) ReadSection(k string, v interface{}) error {
 	err := s.vp.UnmarshalKey(k, v)
 
