@@ -27,14 +27,22 @@ func (u User) Create(db *gorm.DB) *errcode.Error {
 	return nil
 }
 
-func (u User) Get(db *gorm.DB) (User, *errcode.Error) {
+func (u User) Get(db *gorm.DB) (*User, *errcode.Error) {
 	var user User
-	err := db.Where("user_name = ?", u.UserName).First(&user).Error
-	if err == gorm.ErrRecordNotFound {
-		return user, errcode.ErrorUserNameNotFound
+	var err error
+	if u.ID == 0 {
+		err = db.Where("user_name = ?", u.UserName).First(&user).Error
+		if err == gorm.ErrRecordNotFound {
+			return &user, errcode.ErrorUserNameNotFound
+		}
+	} else {
+		err = db.Where("id = ?", u.ID).First(&user).Error
+		if err == gorm.ErrRecordNotFound {
+			return &user, errcode.ErrorUserIDNotFound
+		}
 	}
 	if err != nil {
-		return user, errcode.Convert(err)
+		return &user, errcode.Convert(err)
 	}
-	return user, nil
+	return &user, nil
 }

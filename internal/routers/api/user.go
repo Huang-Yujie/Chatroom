@@ -16,35 +16,34 @@ func NewUser() User {
 
 func (u User) Register(c *gin.Context) {
 	param := request.UserRegisterRequest{}
-	response := response.NewResponse(c)
+	r := response.NewResponse(c)
 	if c.ShouldBindJSON(&param) != nil {
-		response.ToErrorResponse(errcode.InvalidParams)
+		r.ToErrorResponse(errcode.InvalidParams)
 		return
 	}
 
 	svc := service.New(c.Request.Context())
-	user, err := svc.UserRegister(&param)
+	err := svc.UserRegister(&param)
 	if err != nil {
-		response.ToErrorResponse(err)
+		r.ToErrorResponse(err)
 		return
 	}
-	response.ToResponse(user)
+	r.ToResponse(nil)
 }
 
 func (u User) Login(c *gin.Context) {
 	param := request.UserLoginRequest{}
-	response := response.NewResponse(c)
+	r := response.NewResponse(c)
 	if c.ShouldBindJSON(&param) != nil {
-		response.ToErrorResponse(errcode.InvalidParams)
+		r.ToErrorResponse(errcode.InvalidParams)
 		return
 	}
 
 	svc := service.New(c.Request.Context())
-	user, err := svc.UserLogin(&param)
+	content, err := svc.UserLogin(&param)
 	if err != nil {
-		response.ToErrorResponse(err)
+		r.ToErrorResponse(err)
 		return
 	}
-	response.ToResponse(user)
-
+	r.ToResponse(content)
 }
