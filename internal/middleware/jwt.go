@@ -18,7 +18,7 @@ func JWT() gin.HandlerFunc {
 			if err != nil {
 				code = errcode.UnauthorizedTokenError
 			} else {
-				c.Set("UserID", claims.ID)
+				c.Set("UserID", claims.UserID)
 			}
 		}
 		if code != errcode.Success {

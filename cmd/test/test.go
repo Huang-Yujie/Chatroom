@@ -13,19 +13,10 @@ import (
 
 func main() {
 	setupSettings()
-	// token, err := auth.GenerateToken(4)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// claims, err := auth.ParseToken(token)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println("UserID", claims.UserID)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Hour)
 	defer cancel()
 
-	c, _, err := websocket.Dial(ctx, "ws://localhost:8080/ws", nil)
+	c, _, err := websocket.Dial(ctx, "ws://175.178.43.145:4001/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJpc3MiOiJIdWFuZyIsImV4cCI6MTY0ODEwNDEzMSwibmJmIjoxNjQ4MDk2OTMxLCJpYXQiOjE2NDgwOTY5MzF9.pvLgLeNv_jaP9nu7HV03CFcm-tGrsPwi5q9d1HyR0U4", nil)
 	if err != nil {
 		panic(err)
 	}
