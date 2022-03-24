@@ -16,7 +16,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Hour)
 	defer cancel()
 
-	c, _, err := websocket.Dial(ctx, "ws://175.178.43.145:4001/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJpc3MiOiJIdWFuZyIsImV4cCI6MTY0ODEwNDEzMSwibmJmIjoxNjQ4MDk2OTMxLCJpYXQiOjE2NDgwOTY5MzF9.pvLgLeNv_jaP9nu7HV03CFcm-tGrsPwi5q9d1HyR0U4", nil)
+	c, _, err := websocket.Dial(ctx, "ws://175.178.43.145:4001/ws/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpc3MiOiJIdWFuZyIsImV4cCI6MTY0ODEwOTc4MCwibmJmIjoxNjQ4MTAyNTgwLCJpYXQiOjE2NDgxMDI1ODB9.SKzS7sA095yzLl13sDf877up9m8_s2zWpXiXdR4yjJY", nil)
 	if err != nil {
 		panic(err)
 	}
