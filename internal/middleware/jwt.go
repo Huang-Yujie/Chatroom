@@ -9,9 +9,9 @@ import (
 
 func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.GetHeader("token")
+		token, exists := c.GetQuery("token")
 		code := errcode.Success
-		if token == "" {
+		if !exists || token == "" {
 			code = errcode.InvalidParams
 		} else {
 			claims, err := auth.ParseToken(token)
