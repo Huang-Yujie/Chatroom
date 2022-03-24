@@ -10,8 +10,8 @@ type User struct {
 	UserName  string `json:"user_name"`
 	Nickname  string `json:"nickname"`
 	Password  string `json:"-"`
-	CreatedAt int64  `gorm:"autoCreateTime:milli" json:"created_at"`
-	UpdatedAt int64  `gorm:"autoUpdateTime:milli" json:"updated_at"`
+	CreatedAt int64  `json:"created_at"`
+	UpdatedAt int64  `json:"updated_at"`
 }
 
 func (u User) Create(db *gorm.DB) *errcode.Error {
